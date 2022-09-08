@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "spread"
+version = "0.1.0"
+description = ""
+authors = ["kyle dougan <kdougan@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.81.0"
+uvicorn = "^0.18.3"
+dynaconf = "^3.1.9"
+psycopg2 = "^2.9.3"
+pony = "^0.7.16"
+python-multipart = "^0.0.5"
+Jinja2 = "^3.1.2"
+websockets = "^10.3"
+APScheduler = "^3.9.1"
+orjson = "^3.8.0"
+
+[tool.poetry.dev-dependencies]
+autopep8 = "^1.7.0"
+pylint = "^2.15.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
