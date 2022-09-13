@@ -16,6 +16,7 @@
       document.querySelector('#ws-id').textContent = client_id;
 
       let ws = null;
+      const fr = new FileReader();
 
       const connect = (cid) => {
         ws = new WebSocket(`ws://localhost:8000/ws/${cid}`);
@@ -23,12 +24,8 @@
         ws.onmessage = (event) => {
           var messages = document.getElementById('messages');
           var content = document.createTextNode(event.data);
-          // console.log(content.textContent);
-          messages.innerHTML = JSON.stringify(
-            JSON.parse(content.textContent),
-            null,
-            2
-          );
+          // console.log(event.data);
+          messages.innerHTML = JSON.stringify(JSON.parse(event.data), null, 2);
         };
 
         ws.onclose = (e) => {

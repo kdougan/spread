@@ -1,6 +1,12 @@
 from __future__ import annotations
+from typing import Union
 from datetime import datetime
 from pydantic import BaseModel, Field
+
+
+class Ticker(BaseModel):
+    symbol: str
+    kline: dict[str, Union[Kline, None]]
 
 
 class Kline(BaseModel):
@@ -24,7 +30,7 @@ class KlineData(BaseModel):
     closePrice: float = Field(alias='c')
     highPrice: float = Field(alias='h')
     lowPrice: float = Field(alias='l')
-    baseAssetVolume: float = Field(alias='v')
+    baseAssetVolume: float = Field(alias='v', default=0.0)
     numberOfTrades: int = Field(alias='n')
     isThisKlineClosed: bool = Field(alias='x')
     quoteAssetVolume: float = Field(alias='q')
@@ -37,3 +43,4 @@ class KlineData(BaseModel):
 
 
 Kline.update_forward_refs()
+Ticker.update_forward_refs()

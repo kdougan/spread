@@ -1,28 +1,21 @@
 import asyncio
+import itertools
 import websockets
-import json
+import orjson
 from multiprocessing import Queue
-
-from src.schema import Kline
 
 
 class Receiver:
-    def __init__(self, queue: Queue):
+    def __init__(self, symbols: list[str], queue: Queue):
         self.uri = 'wss://fstream.binance.com/ws'
         self.queue = queue
         self.running = False
-        self.payload = {
+
+        self.payload = orjson.dumps({
             'method': 'SUBSCRIBE',
-            'params':
-            [
-                'btcusdt@kline_15m',
-                'btcusdt@kline_1h',
-                'btcusdt@kline_4h',
-                'btcusdt@kline_1w',
-                'btcusdt@kline_1M'
-            ],
+            'params': symbols,
             'id': 1
-        }
+        }).decode('utf-8')
 
     def run(self):
         loop = asyncio.new_event_loop()
@@ -31,14 +24,13 @@ class Receiver:
 
     async def receive(self):
         async with websockets.connect(self.uri, ssl=True) as sock:
-            await sock.send(json.dumps(self.payload))
+            await sock.send(self.payload)
             try:
                 while True:
                     async for message in sock:
                         try:
-                            kline = Kline(**json.loads(message))
-                            self.queue.put(kline)
+                            self.queue.put(orjson.loads(message))
                         except Exception as e:
-                            print(e)
+                            print(e, message)
             except websockets.ConnectionClosed as e:
                 print('ERR', e)
